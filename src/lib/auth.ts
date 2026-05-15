@@ -75,11 +75,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      const appBaseUrl = "http://localhost:3000/album-copa-2026";
+      const domain = process.env.NODE_ENV === 'production' 
+        ? 'https://mandebem.com' 
+        : 'http://localhost:3000';
+        
+      const appBaseUrl = `${domain}/album-copa-2026`;
+      
       if (url.startsWith(appBaseUrl)) return url;
       if (url.startsWith("/")) {
         if (url.startsWith("/album-copa-2026")) {
-          return `http://localhost:3000${url}`;
+          return `${domain}${url}`;
         }
         return `${appBaseUrl}${url}`;
       }
