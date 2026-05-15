@@ -54,7 +54,7 @@ export default async function PublicRepeatedPage({ params }: { params: Promise<{
   const groupedRepeated = STICKERS_DATA.map(team => {
     const teamRepeated = team.stickers
       .map(code => {
-        const found = repeatedStickers.find(s => s.code === code);
+        const found = repeatedStickers.find((s: any) => s.code === code);
         return found ? { code, quantity: found.quantity } : null;
       })
       .filter(Boolean);
