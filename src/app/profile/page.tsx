@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { User, Lock, Save, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -26,7 +27,7 @@ export default function ProfilePage() {
     setMessage("");
 
     try {
-      const res = await fetch("/album-copa/api/user", {
+      const res = await fetch("/album-copa-2026/api/user", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, password }),
@@ -50,8 +51,8 @@ export default function ProfilePage() {
       <Navbar />
 
       <main className="container mx-auto max-w-2xl px-4 py-8">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="mb-8 flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
         >
           <ChevronLeft size={20} />
@@ -69,9 +70,14 @@ export default function ProfilePage() {
             )}
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-300">Nome</label>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Nome
+              </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                  size={18}
+                />
                 <input
                   type="text"
                   value={name}
@@ -83,9 +89,14 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-300">Nova Senha (deixe em branco para não alterar)</label>
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Nova Senha (deixe em branco para não alterar)
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                  size={18}
+                />
                 <input
                   type="password"
                   value={password}
@@ -113,6 +124,9 @@ export default function ProfilePage() {
           </form>
         </div>
       </main>
+      <div className="container mx-auto px-4 py-8">
+        <Footer />
+      </div>
     </div>
   );
 }

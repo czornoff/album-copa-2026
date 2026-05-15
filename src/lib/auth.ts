@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
 
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.password,
         );
 
         if (!isPasswordCorrect) {
@@ -75,19 +75,20 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // baseUrl: http://localhost:3000/album-copa
-      if (url.startsWith(baseUrl)) return url;
+      const appBaseUrl = "http://localhost:3000/album-copa-2026";
+      if (url.startsWith(appBaseUrl)) return url;
       if (url.startsWith("/")) {
-        // Se a URL já começar com /album-copa, não anexa novamente
-        if (url.startsWith("/album-copa")) return `${new URL(baseUrl).origin}${url}`;
-        return `${baseUrl}${url}`;
+        if (url.startsWith("/album-copa-2026")) {
+          return `http://localhost:3000${url}`;
+        }
+        return `${appBaseUrl}${url}`;
       }
-      return baseUrl;
+      return appBaseUrl;
     },
   },
   pages: {
-    signIn: "/album-copa/auth/signin",
-    error: "/album-copa/auth/signin",
+    signIn: "/album-copa-2026/auth/signin",
+    error: "/album-copa-2026/auth/signin",
   },
   session: {
     strategy: "jwt",

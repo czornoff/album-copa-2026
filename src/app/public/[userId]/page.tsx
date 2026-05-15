@@ -2,12 +2,13 @@ import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import { STICKERS_DATA, PLAYER_DATA_MAP, ISO_MAP } from "@/data/stickers";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import mongoose from "mongoose";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-async function getRepeatedStickers(userId: string) {
+async function getUserData(userId: string) {
   await dbConnect();
   
   try {
@@ -29,23 +30,25 @@ async function getRepeatedStickers(userId: string) {
 
     const user = await User.collection.findOne(query);
     
-    if (!user || !user.stickers) return [];
+    if (!user) return { name: "Colecionador", repeatedStickers: [] };
     
-    return user.stickers
+    const repeatedStickers = user.stickers ? user.stickers
       .filter((s: any) => s.quantity > 1)
       .map((s: any) => ({
         code: s.code,
         quantity: s.quantity - 1
-      }));
+      })) : [];
+      
+    return { name: user.name || "Colecionador", repeatedStickers };
   } catch (error) {
-    console.error("Error fetching user stickers:", error);
-    return [];
+    console.error("Error fetching user data:", error);
+    return { name: "Colecionador", repeatedStickers: [] };
   }
 }
 
 export default async function PublicRepeatedPage({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
-  const repeatedStickers = await getRepeatedStickers(userId);
+  const { name, repeatedStickers } = await getUserData(userId);
   
   // Agrupar por seleção
   const groupedRepeated = STICKERS_DATA.map(team => {
@@ -73,7 +76,7 @@ export default async function PublicRepeatedPage({ params }: { params: Promise<{
           <h1 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-secondary to-amber-500">
             Figurinhas Repetidas
           </h1>
-          <p className="text-slate-400">Lista pública para trocas • ID: {userId}</p>
+          <p className="text-slate-400">Lista pública para trocas • {name}</p>
           
           <div className="mt-6 inline-flex items-center gap-4 bg-white/5 border border-white/10 px-6 py-3 rounded-2xl">
             <div className="text-center">
@@ -145,10 +148,7 @@ export default async function PublicRepeatedPage({ params }: { params: Promise<{
           </div>
         )}
       </main>
-      
-      <footer className="py-20 text-center text-slate-600 text-sm">
-        <p>© 2026 Controle de Figurinhas • Sistema de Trocas</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

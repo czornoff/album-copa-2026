@@ -19,7 +19,7 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const res = await fetch("/album-copa/api/register", {
+      const res = await fetch("/album-copa-2026/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -46,8 +46,12 @@ export default function RegisterPage() {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20 text-secondary">
             <Trophy size={32} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Criar Conta</h1>
-          <p className="mt-2 text-sm text-slate-400">Comece sua coleção agora mesmo</p>
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            Criar Conta
+          </h1>
+          <p className="mt-2 text-sm text-slate-400">
+            Comece sua coleção agora mesmo
+          </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -56,10 +60,12 @@ export default function RegisterPage() {
               {error}
             </div>
           )}
-          
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300">Nome Completo</label>
+              <label className="block text-sm font-medium text-slate-300">
+                Nome Completo
+              </label>
               <input
                 type="text"
                 required
@@ -70,7 +76,9 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300">Email</label>
+              <label className="block text-sm font-medium text-slate-300">
+                Email
+              </label>
               <input
                 type="email"
                 required
@@ -81,7 +89,9 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300">Senha</label>
+              <label className="block text-sm font-medium text-slate-300">
+                Senha
+              </label>
               <input
                 type="password"
                 required
@@ -103,7 +113,10 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-slate-400">
             Já tem uma conta?{" "}
-            <Link href="/auth/signin" className="font-semibold text-secondary hover:underline">
+            <Link
+              href="/auth/signin"
+              className="font-semibold text-secondary hover:underline"
+            >
               Entrar
             </Link>
           </p>
