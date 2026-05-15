@@ -65,7 +65,7 @@ export default async function PublicRepeatedPage({ params }: { params: Promise<{
     };
   }).filter(team => team.repeated.length > 0);
 
-  const totalRepeatedCount = repeatedStickers.reduce((acc, curr) => acc + curr.quantity, 0);
+  const totalRepeatedCount = repeatedStickers.reduce((acc: number, curr: any) => acc + curr.quantity, 0);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
