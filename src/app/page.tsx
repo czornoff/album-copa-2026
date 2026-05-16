@@ -163,7 +163,7 @@ export default function Dashboard() {
       <main className="container mx-auto px-4 py-8">
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="animate-in fade-in slide-in-from-left duration-700">
-            <h1 className="text-4xl md:text-5xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-secondary to-amber-500">
+            <h1 className="text-2xl md:text-5xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-secondary to-amber-500">
               Copa do Mundo 2026
             </h1>
             <p className="text-slate-400">
@@ -180,7 +180,7 @@ export default function Dashboard() {
                 <Trophy size={20} />
               </div>
               <div>
-                <p className="text-[10px] md:text-sm font-medium text-slate-400">
+                <p className="text-[14px] md:text-sm font-medium text-slate-400">
                   Progresso
                 </p>
                 <p className="text-xl md:text-2xl font-bold">
@@ -202,13 +202,26 @@ export default function Dashboard() {
                 <CheckCircle2 size={20} />
               </div>
               <div>
-                <p className="text-[10px] md:text-sm font-medium text-slate-400">
+                <p className="text-[14px] md:text-sm font-medium text-slate-400">
                   Possui
                 </p>
                 <p className="text-xl md:text-2xl font-bold">
                   {stats.uniqueOwned}
                 </p>
               </div>
+            </div>
+            <div className="mt-4 flex items-center gap-2">
+              <Link
+                href="/adquired"
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 rounded-lg py-2 text-[10px] md:text-xs font-bold transition-all border",
+                  stats.uniqueOwned > 0
+                    ? "bg-green-500/20 text-green-500 border-green-500 hover:bg-green-500/50 shadow-lg shadow-secondary/10"
+                    : "bg-white/5 text-slate-500 border-white/10 pointer-events-none opacity-50",
+                )}
+              >
+                <span className="hidden md:block">VER </span>TODAS
+              </Link>
             </div>
           </div>
 
@@ -218,11 +231,24 @@ export default function Dashboard() {
                 <Circle size={20} />
               </div>
               <div>
-                <p className="text-[10px] md:text-sm font-medium text-slate-400">
+                <p className="text-[14px] md:text-sm font-medium text-slate-400">
                   Faltam
                 </p>
                 <p className="text-xl md:text-2xl font-bold">{stats.missing}</p>
               </div>
+            </div>
+            <div className="mt-4 flex items-center gap-2">
+              <Link
+                href="/missed"
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 rounded-lg py-2 text-[10px] md:text-xs font-bold transition-all border",
+                  stats.missing > 0
+                    ? "bg-red-500/20 text-red-500 border-red-500 hover:bg-red-500/50 shadow-lg shadow-secondary/10"
+                    : "bg-white/5 text-slate-500 border-white/10 pointer-events-none opacity-50",
+                )}
+              >
+                <span className="hidden md:block">VER </span>TODAS
+              </Link>
             </div>
           </div>
 
@@ -232,7 +258,7 @@ export default function Dashboard() {
                 <Trophy size={20} />
               </div>
               <div>
-                <p className="text-[10px] md:text-sm font-medium text-slate-400">
+                <p className="text-[14px] md:text-sm font-medium text-slate-400">
                   Repetidas
                 </p>
                 <p className="text-xl md:text-2xl font-bold">
@@ -251,7 +277,7 @@ export default function Dashboard() {
                     : "bg-white/5 text-slate-500 border-white/10 pointer-events-none opacity-50",
                 )}
               >
-                VER TODAS <ChevronRight size={14} />
+                <span className="hidden md:block">VER </span>TODAS
               </Link>
 
               <button
@@ -272,7 +298,7 @@ export default function Dashboard() {
                 ) : (
                   <>
                     <LinkIcon size={14} />
-                    <span>COMPARTILHAR</span>
+                    <span className="hidden md:block">ENVIAR</span>
                   </>
                 )}
               </button>
@@ -284,20 +310,38 @@ export default function Dashboard() {
         <section className="space-y-8">
           {/* Groups and Specials */}
           <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="grid grid-cols-12 items-center gap-2 mb-2">
+              <div className="col-span-12">
+                {/* Search Bar */}
+                <div className="relative w-full">
+                    <Search
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+                        size={18}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Código ou nome (ex: BRA 10 ou Messi)"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full rounded-2xl bg-white/5 border border-white/10 pl-12 pr-4 py-3 text-sm focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all"
+                    />
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-12 items-center gap-2 mb-2">
               <button
                 onClick={() => {
                   setSelectedGroup("Specials");
                   setSelectedTeamId("FWC");
                 }}
                 className={cn(
-                  "whitespace-nowrap rounded-full px-6 py-2 text-sm font-bold transition-all border",
+                  "col-span-12 whitespace-nowrap rounded-full px-6 py-2 text-[13px] font-bold transition-all border",
                   selectedGroup === "Specials"
                     ? "bg-primary text-white border-primary shadow-[0_0_15px_rgba(138,21,56,0.5)]"
                     : "bg-white/5 text-slate-400 border-white/10 hover:border-white/20",
                 )}
               >
-                Especiais
+                ESPECIAIS
               </button>
               {GROUPS.map((g) => (
                 <button
@@ -308,7 +352,7 @@ export default function Dashboard() {
                     if (firstTeam) setSelectedTeamId(firstTeam.id);
                   }}
                   className={cn(
-                    "min-w-[44px] md:min-w-[100px] h-11 flex items-center justify-center rounded-full text-[10px] md:text-xs font-bold transition-all border px-2",
+                    "col-span-2 md:col-span-1 h-11 flex items-center justify-center rounded-full text-[13px] md:text-xs font-bold transition-all border px-2",
                     selectedGroup === g
                       ? "bg-secondary text-primary border-secondary shadow-[0_0_15px_rgba(255,204,0,0.3)]"
                       : "bg-white/5 text-slate-400 border-white/10 hover:border-white/20",
@@ -320,7 +364,7 @@ export default function Dashboard() {
             </div>
 
             {/* Selection Buttons of current Group */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-3">
               {currentTeams.map((team) => {
                 const isoMap: Record<string, string> = {
                   MEX: "mx",
@@ -448,7 +492,7 @@ export default function Dashboard() {
                       ) : (
                         <span>{team.name.split(" ")[0]}</span>
                       )}
-                      <span className="max-w-[80px] md:max-w-none truncate">
+                      <span className="max-w-none">
                         {team.name.split(" ").slice(1).join(" ")}
                       </span>
                       {emblemFile ? (
@@ -471,21 +515,6 @@ export default function Dashboard() {
                   </button>
                 );
               })}
-            </div>
-
-            {/* Search Bar */}
-            <div className="relative max-w-md">
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
-                size={18}
-              />
-              <input
-                type="text"
-                placeholder="Buscar por código ou nome (ex: BRA 10 ou Messi)"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-2xl bg-white/5 border border-white/10 pl-12 pr-4 py-3 text-sm focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all"
-              />
             </div>
           </div>
 

@@ -133,7 +133,7 @@ export default function StickerCard({
         </button>
 
         <div className="flex-[1.5] flex items-center justify-center bg-[#FFC000] text-black font-black text-xs border-x border-black/10">
-          {count}
+          {count-1}
         </div>
 
         <button

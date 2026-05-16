@@ -5,12 +5,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import StickerCardRepeated from "@/components/StickerCardRepeated";
-import { STICKERS_DATA, GROUPS, ISO_MAP } from "@/data/stickers";
-import { Trophy, ChevronLeft, Share2 } from "lucide-react";
+import StickerCard from "@/components/StickerCard";
+import { STICKERS_DATA, ALL_STICKERS, GROUPS, ISO_MAP } from "@/data/stickers";
+import { Trophy, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function RepeatedPage() {
+export default function AdquiredPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -53,29 +53,27 @@ export default function RepeatedPage() {
     } catch { console.error("Failed to sync sticker status"); }
   };
 
-  const repeatedMap = useMemo(() => {
+  const ownedMap = useMemo(() => {
     const map: Record<string, number> = {};
-    userStickers.filter((s) => s.quantity > 1).forEach((s) => { map[s.code] = s.quantity; });
+    userStickers.forEach((s) => { map[s.code] = s.quantity; });
     return map;
   }, [userStickers]);
 
-  const totalRepeated = useMemo(
-    () => Object.values(repeatedMap).reduce((acc, qty) => acc + (qty - 1), 0),
-    [repeatedMap]
-  );
+  const totalAdquired = useMemo(() => userStickers.length, [userStickers]);
 
-  // Agrupadas por grupo e depois por seleção
+  // Agrupar por grupo e depois por seleção
   const groupedData = useMemo(() => {
-    const groups: { groupLabel: string; teams: { id: string; name: string; repeated: { code: string; quantity: number }[] }[] }[] = [];
+    const groups: { groupLabel: string; teams: { id: string; name: string; owned: { code: string; quantity: number }[]; total: number }[] }[] = [];
 
     // Especiais primeiro
     const specialTeams = STICKERS_DATA.filter((t) => !t.group)
       .map((team) => ({
         id: team.id,
         name: team.name,
-        repeated: team.stickers.filter((c) => repeatedMap[c] > 0).map((c) => ({ code: c, quantity: repeatedMap[c] })),
+        total: team.stickers.length,
+        owned: team.stickers.filter((c) => ownedMap[c] > 0).map((c) => ({ code: c, quantity: ownedMap[c] })),
       }))
-      .filter((t) => t.repeated.length > 0);
+      .filter((t) => t.owned.length > 0);
     if (specialTeams.length > 0) groups.push({ groupLabel: "Especiais", teams: specialTeams });
 
     // Grupos A–H
@@ -84,14 +82,15 @@ export default function RepeatedPage() {
         .map((team) => ({
           id: team.id,
           name: team.name,
-          repeated: team.stickers.filter((c) => repeatedMap[c] > 0).map((c) => ({ code: c, quantity: repeatedMap[c] })),
+          total: team.stickers.length,
+          owned: team.stickers.filter((c) => ownedMap[c] > 0).map((c) => ({ code: c, quantity: ownedMap[c] })),
         }))
-        .filter((t) => t.repeated.length > 0);
+        .filter((t) => t.owned.length > 0);
       if (teams.length > 0) groups.push({ groupLabel: `Grupo ${g}`, teams });
     });
 
     return groups;
-  }, [repeatedMap]);
+  }, [ownedMap]);
 
   if (!mounted || status === "loading" || loading) {
     return (
@@ -109,33 +108,18 @@ export default function RepeatedPage() {
           <ChevronLeft size={20} /> Voltar para a Coleção
         </Link>
 
-        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-4xl font-black tracking-tight text-white mb-2">Minhas Repetidas</h1>
-            <p className="text-slate-400">{totalRepeated} figurinha{totalRepeated !== 1 ? "s" : ""} para troca</p>
-          </div>
-          {totalRepeated > 0 && (
-            <button
-              className="flex items-center gap-2 rounded-xl bg-secondary px-6 py-3 font-bold text-primary hover:bg-secondary/90 transition-all shadow-lg self-start md:self-auto"
-              onClick={() => {
-                const all = Object.entries(repeatedMap).map(([code, qty]) => `${code} (x${qty - 1})`).join(", ");
-                navigator.clipboard.writeText(`Tenho estas repetidas para trocar: ${all}`);
-                alert("Lista copiada para a área de transferência!");
-              }}
-            >
-              <Share2 size={20} />
-              Copiar Lista
-            </button>
-          )}
+        <div className="mb-10">
+          <h1 className="text-4xl font-black tracking-tight text-white mb-2">Minhas Figurinhas</h1>
+          <p className="text-slate-400">{totalAdquired} figurinha{totalAdquired !== 1 ? "s" : ""} na coleção</p>
         </div>
 
-        {totalRepeated === 0 ? (
+        {totalAdquired === 0 ? (
           <div className="rounded-3xl border-2 border-dashed border-white/10 py-24 text-center">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/5 text-slate-600">
               <Trophy size={40} />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Sem repetidas ainda</h2>
-            <p className="text-slate-500">Quando você marcar mais de uma figurinha, elas aparecerão aqui.</p>
+            <h2 className="text-2xl font-bold text-white mb-2">Sem figurinhas ainda</h2>
+            <p className="text-slate-500">Quando você marcar figurinhas, elas aparecerão aqui.</p>
           </div>
         ) : (
           <div className="space-y-10">
@@ -151,42 +135,39 @@ export default function RepeatedPage() {
                 </div>
 
                 <div className="space-y-8">
-                  {teams.map((team) => {
-                    const teamTotal = team.repeated.reduce((acc, s) => acc + (s.quantity - 1), 0);
-                    return (
-                      <section key={team.id}>
-                        {/* Card de cabeçalho da seleção */}
-                        <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-white/5 border border-white/10">
-                          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
-                            {ISO_MAP[team.id] ? (
-                              <img src={`https://flagcdn.com/w80/${ISO_MAP[team.id]}.png`} alt="" className="w-6 h-auto rounded-sm" />
-                            ) : (
-                              <Trophy size={14} className="text-secondary" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <h2 className="text-sm font-bold">{team.name.split(" ").slice(1).join(" ") || team.name}</h2>
-                          </div>
-                          <span className="text-xs font-black text-secondary bg-secondary/10 px-2 py-1 rounded-full">
-                            {teamTotal} para troca
-                          </span>
+                  {teams.map((team) => (
+                    <section key={team.id}>
+                      {/* Card de cabeçalho da seleção */}
+                      <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
+                          {ISO_MAP[team.id] ? (
+                            <img src={`https://flagcdn.com/w80/${ISO_MAP[team.id]}.png`} alt="" className="w-6 h-auto rounded-sm" />
+                          ) : (
+                            <Trophy size={14} className="text-secondary" />
+                          )}
                         </div>
+                        <div className="flex-1">
+                          <h2 className="text-sm font-bold">{team.name.split(" ").slice(1).join(" ") || team.name}</h2>
+                        </div>
+                        <span className="text-xs font-black text-green-400 bg-green-400/10 px-2 py-1 rounded-full">
+                          {team.owned.length}/{team.total}
+                        </span>
+                      </div>
 
-                        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
-                          {team.repeated.map(({ code, quantity }) => (
-                            <StickerCardRepeated
-                              key={code}
-                              code={code}
-                              count={quantity}
-                              onToggle={() => handleStickerAction(code, "toggle")}
-                              onIncrement={(e) => { e.stopPropagation(); handleStickerAction(code, "increment"); }}
-                              onDecrement={(e) => { e.stopPropagation(); handleStickerAction(code, "decrement"); }}
-                            />
-                          ))}
-                        </div>
-                      </section>
-                    );
-                  })}
+                      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
+                        {team.owned.map(({ code, quantity }) => (
+                          <StickerCard
+                            key={code}
+                            code={code}
+                            count={quantity}
+                            onToggle={() => handleStickerAction(code, "toggle")}
+                            onIncrement={(e) => { e.stopPropagation(); handleStickerAction(code, "increment"); }}
+                            onDecrement={(e) => { e.stopPropagation(); handleStickerAction(code, "decrement"); }}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  ))}
                 </div>
               </div>
             ))}
