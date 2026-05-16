@@ -349,6 +349,13 @@ export default function Dashboard() {
               >
                 ESPECIAIS
               </button>
+            <div className="col-span-12 flex items-center gap-3 mt-6">
+                <div className="h-px flex-1 bg-white/10" />
+                <span className="text-xs font-black uppercase tracking-widest text-secondary px-3 py-1 rounded-full border border-secondary/30 bg-secondary/10">
+                GRUPOS
+                </span>
+                <div className="h-px flex-1 bg-white/10" />
+            </div>
               {GROUPS.map((g) => (
                 <button
                   key={g}
@@ -370,6 +377,13 @@ export default function Dashboard() {
             </div>
 
             {/* Selection Buttons of current Group */}
+            <div className="col-span-12 flex items-center gap-3 mt-6">
+                <div className="h-px flex-1 bg-white/10" />
+                <span className="text-xs font-black uppercase tracking-widest text-secondary px-3 py-1 rounded-full border border-secondary/30 bg-secondary/10">
+                SELEÇÕES
+                </span>
+                <div className="h-px flex-1 bg-white/10" />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-3">
               {currentTeams.map((team) => {
                 const isoMap: Record<string, string> = {

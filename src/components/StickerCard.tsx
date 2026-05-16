@@ -4,7 +4,6 @@ import { cn } from "../lib/utils";
 import { Plus, Minus, Trophy } from "lucide-react";
 import { ISO_MAP, EMBLEM_MAP, PLAYER_DATA_MAP } from "@/data/stickers";
 
-// Definição local para garantir funcionamento
 const cnLocal = cn;
 
 interface StickerCardProps {
@@ -20,6 +19,7 @@ export default function StickerCard({
   count,
   onIncrement,
   onDecrement,
+  onToggle,
 }: StickerCardProps) {
   const isOwned = count > 0;
 
@@ -30,12 +30,13 @@ export default function StickerCard({
 
   return (
     <div
+      onClick={!isOwned ? onToggle : undefined}
       className={cnLocal(
         "group relative flex flex-col bg-slate-900/50 border transition-all duration-300 overflow-hidden",
         "aspect-[3/4] w-full max-w-[140px] mx-auto rounded-xl",
         isOwned
           ? "border-secondary shadow-lg shadow-secondary/10"
-          : "border-white/10",
+          : "border-white/10 cursor-pointer hover:border-white/30 hover:bg-white/5",
       )}
     >
       {/* Header with Code */}
@@ -122,27 +123,28 @@ export default function StickerCard({
         )}
       </div>
 
-      {/* FOOTER CONTROLS */}
-      <div className="flex items-stretch h-8 w-full border-t border-white/5">
-        <button
-          onClick={(e) => onDecrement(e)}
-          disabled={count === 0}
-          className="flex-1 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          <Minus size={14} strokeWidth={3} />
-        </button>
+      {/* FOOTER CONTROLS — só aparece quando possui ao menos 1 */}
+      {isOwned && (
+        <div className="flex items-stretch h-8 w-full border-t border-white/5">
+          <button
+            onClick={(e) => onDecrement(e)}
+            className="flex-1 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white transition-colors"
+          >
+            <Minus size={14} strokeWidth={3} />
+          </button>
 
-        <div className="flex-[1.5] flex items-center justify-center bg-[#FFC000] text-black font-black text-xs border-x border-black/10">
-          {count}
+          <div className="flex-[1.5] flex items-center justify-center bg-[#FFC000] text-black font-black text-xs border-x border-black/10">
+            {count}
+          </div>
+
+          <button
+            onClick={(e) => onIncrement(e)}
+            className="flex-1 flex items-center justify-center bg-green-600 hover:bg-green-700 text-white transition-colors"
+          >
+            <Plus size={14} strokeWidth={3} />
+          </button>
         </div>
-
-        <button
-          onClick={(e) => onIncrement(e)}
-          className="flex-1 flex items-center justify-center bg-green-600 hover:bg-green-700 text-white transition-colors"
-        >
-          <Plus size={14} strokeWidth={3} />
-        </button>
-      </div>
+      )}
     </div>
   );
 }
