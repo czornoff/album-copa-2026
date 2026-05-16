@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ShareModal } from "@/components/ShareModal";
 import StickerCard from "@/components/StickerCard";
 import {
   STICKERS_DATA,
@@ -136,8 +137,10 @@ export default function Dashboard() {
 
   const userId = (session?.user as any)?.id;
   const [copying, setCopying] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
 
-  const copyPublicLink = () => {
+  const openShareModal = () => {
     if (!userId) return;
     const url =
       typeof window !== "undefined"
@@ -146,6 +149,8 @@ export default function Dashboard() {
     navigator.clipboard.writeText(url);
     setCopying(true);
     setTimeout(() => setCopying(false), 2000);
+    setShareUrl(url);
+    setShowShareModal(true);
   };
 
   if (!mounted || status === "loading" || loading) {
@@ -158,6 +163,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
+      {showShareModal && <ShareModal url={shareUrl} onClose={() => setShowShareModal(false)} />}
       <Navbar />
 
       <main className="container mx-auto px-4 py-8">
@@ -190,7 +196,7 @@ export default function Dashboard() {
             </div>
             <div className="mt-4 h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
+                className="h-full bg-gradient-to-r from-green-800 to-secondary transition-all duration-500"
                 style={{ width: `${stats.percentage}%` }}
               ></div>
             </div>
@@ -281,7 +287,7 @@ export default function Dashboard() {
               </Link>
 
               <button
-                onClick={copyPublicLink}
+                onClick={openShareModal}
                 disabled={stats.repeated === 0}
                 className={cn(
                   "flex-1 flex items-center justify-center gap-2 rounded-lg py-2 text-[10px] md:text-xs font-bold transition-all border",
@@ -298,7 +304,7 @@ export default function Dashboard() {
                 ) : (
                   <>
                     <LinkIcon size={14} />
-                    <span className="hidden md:block">ENVIAR</span>
+                    <span className="hidden md:block">LISTAR</span>
                   </>
                 )}
               </button>
