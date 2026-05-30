@@ -41,10 +41,9 @@ export default function StickerCard({
     >
       {/* Header with Code */}
       <div className="flex items-center justify-between px-2 py-1 bg-black/40 border-b border-white/5">
-        <span className="text-[10px] font-black text-secondary tracking-tighter uppercase">
-          {teamId}
-        </span>
-        <span className="text-[10px] font-black text-white">{suffix}</span>
+        <div className="text-[18px] font-black text-secondary tracking-tighter uppercase w-full text-center">
+            {suffix === "00" ?  suffix :  `${teamId}${suffix}`}
+        </div>
       </div>
 
       {/* Content Area */}
@@ -60,7 +59,7 @@ export default function StickerCard({
                   !isOwned && "opacity-60",
                 )}
               />
-            ) : suffix === "13" ? (
+            ) : suffix === "13" && teamId !=="FWC" ? (
               <div
                 className={cnLocal(
                   "flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-lg w-full h-full p-2",
@@ -75,7 +74,7 @@ export default function StickerCard({
                 </span>
               </div>
             ) : (
-              <span className="text-xl font-black text-white">
+              <span className="text-[12px] font-black text-white whitespace-pre-line">
                 {player.name}
               </span>
             )}
@@ -118,7 +117,7 @@ export default function StickerCard({
               isOwned ? "text-white" : "text-slate-400",
             )}
           >
-           {suffix}
+            {suffix}
           </span>
         )}
       </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Trophy, Mail } from "lucide-react";
+import Image from "next/image";
 
 function SignInForm() {
   const [email, setEmail] = useState("");
@@ -41,8 +41,8 @@ function SignInForm() {
   return (
     <>
       <div className="flex flex-col items-center justify-center text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20 text-secondary">
-          <Trophy size={32} />
+        <div className="items-center justify-center mb-6">
+          <Image src="/album-copa-2026/album-copa-2026.png" alt="Copa 2026" width={80} height={150} className="h-32 w-24"/>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-white">Bem-vindo de volta</h1>
         <p className="mt-2 text-sm text-slate-400">Entre para gerenciar suas figurinhas</p>

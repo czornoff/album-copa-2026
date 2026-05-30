@@ -108,8 +108,8 @@ export default async function PublicRepeatedPage({ params }: { params: Promise<{
                     />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">{team.name.split(' ').slice(1).join(' ')}</h2>
-                    <p className="text-xs text-secondary font-bold uppercase">{team.repeated.length} repetidas disponíveis</p>
+                    <h2 className="text-xl font-bold uppercase">{team.name.split(' ').slice(1).join(' ')}</h2>
+                    <p className="text-xs text-secondary font-bold uppercase">{team.repeated.length === 1 ? "1 repetida disponível" : `${team.repeated.length} repetidas disponíveis`}</p>
                   </div>
                 </div>
 
@@ -124,7 +124,7 @@ export default async function PublicRepeatedPage({ params }: { params: Promise<{
                         className="relative flex flex-col bg-slate-900/80 border border-secondary/30 rounded-xl aspect-[3/4] overflow-hidden shadow-lg shadow-secondary/5"
                       >
                         <div className="bg-secondary/20 py-1 text-center border-b border-secondary/20">
-                          <span className="text-[10px] font-black text-white uppercase">{stk.code}</span>
+                          <span className="text-[18px] font-black text-white uppercase">{stk.code}</span>
                         </div>
                         
                         <div className="flex-1 flex flex-col items-center justify-center p-2 text-center">
