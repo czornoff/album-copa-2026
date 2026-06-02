@@ -435,6 +435,8 @@ export default function Dashboard() {
                   ITA: "it",
                   COD: "cd",
                   IRN: "ir",
+                  TUR: "tr",
+                  EGY: "eg",
                 };
                 const emblemMap: Record<string, string> = {
                   MEX: "mexico.png",
@@ -484,6 +486,8 @@ export default function Dashboard() {
                   COD: "dr-congo.png",
                   IRN: "iran.png",
                   FWC: "FIFA.png",
+                  EGY: "egypt.png",
+                  TUR: "turkiye.png",
                 };
                 const isoCode = isoMap[team.id];
                 const emblemFile = emblemMap[team.id];
