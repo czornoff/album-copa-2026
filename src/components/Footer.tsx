@@ -1,4 +1,4 @@
-import { Mail, MessageCircle } from "lucide-react";
+import { Globe, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
@@ -11,6 +11,12 @@ export default function Footer() {
             Contato
           </h3>
           <div className="flex flex-col gap-3 text-sm font-semibold tracking-wide text-zinc-500">
+            <a
+              href="https://www.mandebem.com" target="_blank" rel="noopener noreferrer"
+              className="hover:text-orange-600 transition-colors flex items-center justify-center md:justify-start gap-2"
+            >
+              <Globe className="w-4 h-4" /> www.mandebem.com
+            </a>
             <a
               href="mailto:contato@mandebem.com"
               className="hover:text-orange-600 transition-colors flex items-center justify-center md:justify-start gap-2"
@@ -61,11 +67,15 @@ export default function Footer() {
       <div className="border-t border-zinc-200 dark:border-zinc-900 text-center mt-12 pt-8">
         <div className="text-xs text-zinc-400 dark:text-zinc-500 font-medium tracking-wide">
           Seus dados estão seguros conosco. Para saber como tratamos suas informações e o uso de cookies, acesse nossa{" "}
-          <a href="https://mandebem.com/politicadeprivacidade.html" className="hover:text-orange-600 transition-colors">
+          <a href="https://mandebem.com/politicadeprivacidade.html" 
+          target="_blank" rel="noopener noreferrer" 
+          className="hover:text-orange-600 transition-colors">
             Política de Privacidade
           </a>{" "}
           e nossos{" "}
-          <a href="https://mandebem.com/termosdeuso.html" className="hover:text-orange-600 transition-colors">
+          <a href="https://mandebem.com/termosdeuso.html" 
+          target="_blank" rel="noopener noreferrer" 
+          className="hover:text-orange-600 transition-colors">
             Termos de Uso
           </a>
           .<br />
